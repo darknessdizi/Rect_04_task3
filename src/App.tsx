@@ -7,7 +7,6 @@ type TList = string[];
 
 function App() {
   const [list, setList] = useState<TList>([]);
-  console.log(list);
 
   const handleSelect = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     // В поле input выбрали фото и нажали открыть
@@ -19,7 +18,6 @@ function App() {
         ...list,
         ...urls,
       ]);
-      console.log(list);
       evt.target.value = '';
     }
   }
@@ -40,10 +38,20 @@ function App() {
     });
   }
 
+  const clickCross = (url: string) => {
+    // Удаление изображения (нажатие на крестик)
+    const index = list.indexOf(url);
+    const newArray = list.slice();
+    newArray.splice(index, 1);
+    setList([
+      ...newArray,
+    ]);
+  }
+
   return (
     <div className='content__task'>
       <FieldInput inviteFiles={handleSelect} />
-      <FieldImages array={list} />
+      <FieldImages array={list} callback={clickCross}/>
     </div>
   )
 }
