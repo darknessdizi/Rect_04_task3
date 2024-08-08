@@ -11,10 +11,8 @@ function App() {
 
   return (
     <div className='content__task'>
-      
       <FieldInput />
       <FieldImages />
-       
     </div>
   )
 }
