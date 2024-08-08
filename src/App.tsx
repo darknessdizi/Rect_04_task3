@@ -1,28 +1,49 @@
 import './App.css';
-// import { useState } from 'react';
-// import { Form } from './components/Form/Form';
-// import { Table } from './components/Table/Table';
-// import { IElements, IFormData } from './modals/modals';
-// import { sortArray, addZero } from './utils/utils';
+import { useState } from 'react';
 import { FieldInput } from './components/FieldInput/FieldInput';
 import { FieldImages } from './components/FieldImages/FieldImages';
 
+type TList = string[];
+
 function App() {
-  const onChangeInput = (event: React.ClipboardEvent<HTMLTableElement>) => {
+  const [list, setList] = useState<TList>([]);
+  console.log(list);
+
+  const handleSelect = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     // В поле input выбрали фото и нажали открыть
-    const target = event.target as HTMLElement;
-    const { files } = target;
-    console.log(files)
-    // const { files } = event.target;
-    if (!files) return;
-    // this._fileProcessing(files);
-    target.value = ''; // Чтобы повторно открывать один и тот же файл
+    const { files } = evt.target;
+    if (files) {
+      const arrayFiles = [...files];
+      const urls = await Promise.all(arrayFiles.map(o => fileToDataUrl(o)));
+      setList([
+        ...list,
+        ...urls,
+      ]);
+      console.log(list);
+      evt.target.value = '';
+    }
+  }
+
+  const fileToDataUrl = (file: File) => {
+    return new Promise<string>((resolve, reject) => {
+      const fileReader = new FileReader();
+    
+      fileReader.addEventListener('load', (evt) => {
+        resolve(evt.currentTarget?.result);
+      });
+      
+      fileReader.addEventListener('error', (evt) => {
+        reject(new Error(evt.currentTarget?.error));
+      });
+      
+      fileReader.readAsDataURL(file);
+    });
   }
 
   return (
     <div className='content__task'>
-      <FieldInput inviteFiles={onChangeInput} />
-      <FieldImages />
+      <FieldInput inviteFiles={handleSelect} />
+      <FieldImages array={list} />
     </div>
   )
 }
