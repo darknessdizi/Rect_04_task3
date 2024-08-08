@@ -4,7 +4,7 @@ export const ImageItem = () => {
   return (
     <div className="image__conteiner">
       <img src={img1} alt="" className="image" />
-      <a href="" className="image__delete"></a>
+      <a href="#" className="image__delete"></a>
     </div>
   )
 }
