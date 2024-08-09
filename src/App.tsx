@@ -2,6 +2,7 @@ import './App.css';
 import { useState } from 'react';
 import { FieldInput } from './components/FieldInput/FieldInput';
 import { FieldImages } from './components/FieldImages/FieldImages';
+import { MyTarget } from './components/modal/modal';
 
 type TList = string[];
 
@@ -26,12 +27,12 @@ function App() {
     return new Promise<string>((resolve, reject) => {
       const fileReader = new FileReader();
     
-      fileReader.addEventListener('load', (evt) => {
-        resolve(evt.currentTarget?.result);
+      fileReader.addEventListener('load', (evt: ProgressEvent<FileReader>) => {
+          resolve((evt.currentTarget as unknown as MyTarget).result);
       });
       
       fileReader.addEventListener('error', (evt) => {
-        reject(new Error(evt.currentTarget?.error));
+        reject(new Error((evt.currentTarget as unknown as MyTarget).error));
       });
       
       fileReader.readAsDataURL(file);
